@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using JetBrains.Annotations;
 
 public class PlayerController : MonoBehaviour
 {
@@ -25,6 +26,9 @@ public class PlayerController : MonoBehaviour
 
     // UI object to display winning text.
     public GameObject winTextObject;
+    public AudioSource sound;
+    public AudioClip collectcoin;
+    public AudioClip success;
 
     // Start is called before the first frame update.
     void Start()
@@ -72,7 +76,9 @@ public class PlayerController : MonoBehaviour
             // Deactivate the collided object (making it disappear).
             other.gameObject.SetActive(false);
 
-            // Increment the count of "PickUp" objects collected.
+            // Increment the count of "PickUp" objects collected
+            sound.clip = collectcoin;
+            sound.Play();
             count = count + 1;
 
             // Update the count display.
@@ -91,6 +97,8 @@ public class PlayerController : MonoBehaviour
         {
             // Display the win text.
             winTextObject.SetActive(true);
+            sound.clip = success;
+            sound.Play();
         }
     }
 }
