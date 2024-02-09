@@ -1,51 +1,69 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public CameraFollow cameraFollow;
+    Rigidbody2D rb;
+    public float speed;
+    public float jump;
+    float moveVelocity;
+    private Vector2 startPosition;
+    public AudioClip jumpSound;
 
-    private Rigidbody2D rb;
-
+    // Grounded Vars
+    bool isGrounded = true;
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        // Find the CameraFollow script in the scene
-        cameraFollow = FindObjectOfType<CameraFollow>();
-        if (cameraFollow == null)
-        {
-            Debug.LogError("CameraFollow script not found in the scene!");
-        }
-        else
-        {
-            // Set the target of the CameraFollow script to this player's transform
-            cameraFollow.target = transform;
-        }
+        rb.freezeRotation = true;
+        startPosition = GetComponent<Transform>().position;
     }
 
-    private void Update()
+    void Update()
     {
-        // Player input
-        float horizontalInput = Input.GetAxis("Horizontal");
+        // Jumping
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.W)) && isGrounded)
+        {
 
-        // Move the player
-        Move(horizontalInput);
+            if (jumpSound != null)
+            {
+                AudioSource.PlayClipAtPoint(jumpSound, transform.position);
+            }
+
+            GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump);
+            isGrounded = false;
+        }
+
+        moveVelocity = 0;
+
+        // Left Right Movement
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        {
+            moveVelocity = -speed;
+        }
+        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        {
+            moveVelocity = speed;
+        }
+
+        // Apply horizontal movement
+        GetComponent<Rigidbody2D>().velocity = new Vector2(moveVelocity, GetComponent<Rigidbody2D>().velocity.y);
     }
 
-    private void Move(float horizontalInput)
+    public void TeleportToStart()
     {
-        Vector2 movement = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
-        rb.velocity = movement;
+        rb.velocity = Vector2.zero;
+        GetComponent<Transform>().position = startPosition;
+    }
 
-        // Update the camera position to follow the player
-        if (cameraFollow != null)
+    // Check if Grounded
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        foreach (ContactPoint2D contact in collision.contacts)
         {
-            // Calculate the desired camera position on the X-axis only
-            Vector3 desiredPosition = new Vector3(transform.position.x, cameraFollow.transform.position.y, cameraFollow.transform.position.z);
-
-            // Smoothly interpolate between the current camera position and the desired position
-            cameraFollow.transform.position = Vector3.Lerp(cameraFollow.transform.position, desiredPosition, cameraFollow.smoothSpeed);
+            if (contact.normal.y > 0.5f) // Check if the collision is from below (ground)
+            {
+                isGrounded = true;
+            }
         }
     }
 }
