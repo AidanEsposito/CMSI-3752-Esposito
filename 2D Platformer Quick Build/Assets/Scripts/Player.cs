@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     float moveVelocity;
     private Vector2 startPosition;
     public AudioClip jumpSound;
+    AudioSource audioSource;
 
     // Grounded Vars
     bool isGrounded = true;
@@ -16,38 +17,48 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         rb.freezeRotation = true;
         startPosition = GetComponent<Transform>().position;
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+        
+        audioSource = gameObject.AddComponent<AudioSource>();
+        }
+    audioSource.clip = jumpSound;
     }
 
     void Update()
     {
-        // Jumping
-        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.W)) && isGrounded)
+    
+    // Jumping
+    if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.W)) && isGrounded)
+    {
+        if (jumpSound != null)
         {
-
-            if (jumpSound != null)
-            {
-                AudioSource.PlayClipAtPoint(jumpSound, transform.position);
-            }
-
-            GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump);
-            isGrounded = false;
+            audioSource.volume = 1.0f; // Set the volume level
+            audioSource.Play();
         }
 
-        moveVelocity = 0;
-
-        // Left Right Movement
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
-        {
-            moveVelocity = -speed;
-        }
-        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-        {
-            moveVelocity = speed;
-        }
-
-        // Apply horizontal movement
-        GetComponent<Rigidbody2D>().velocity = new Vector2(moveVelocity, GetComponent<Rigidbody2D>().velocity.y);
+        GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump);
+        isGrounded = false;
     }
+
+    moveVelocity = 0;
+
+    // Left Right Movement
+    if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+    {
+        moveVelocity = -speed;
+    }
+    if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+    {
+        moveVelocity = speed;
+    }
+
+    // Apply horizontal movement
+    GetComponent<Rigidbody2D>().velocity = new Vector2(moveVelocity, GetComponent<Rigidbody2D>().velocity.y);
+    }
+
+
 
     public void TeleportToStart()
     {
