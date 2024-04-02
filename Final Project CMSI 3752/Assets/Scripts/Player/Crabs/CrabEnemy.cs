@@ -8,6 +8,12 @@ public class CrabEnemy : MonoBehaviour
     public float attackRange = 1.5f;
     private Animator animator;
     private AudioSource audioSource;
+    private CrabSpawner crabSpawner; 
+
+    public void SetCrabSpawner(CrabSpawner spawner)
+    {
+        crabSpawner = spawner;
+    }
 
     void Start()
     {
@@ -17,7 +23,7 @@ public class CrabEnemy : MonoBehaviour
     }
 
     void Update()
-   {
+    {
         if (player != null)
         {
             MoveTowardsPlayer();
@@ -27,8 +33,6 @@ public class CrabEnemy : MonoBehaviour
                 Attack();
             }
         }
-
-
     }
 
     void MoveTowardsPlayer()
@@ -50,17 +54,28 @@ public class CrabEnemy : MonoBehaviour
     void Attack()
     {
         animator.SetTrigger("Attack");
-
     }
 
-    // void OnTriggerEnter2D(Collider2D other)
-    // {
-        
-    //     if (other.CompareTag("Bullets"))
-    //     {
-            
-    //         audioSource.PlayOneShot(crabDeathSound);
-    //         Destroy(gameObject);
-    //     }
-    // }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Bullets"))
+        {
+            // Play death sound
+            // audioSource.PlayOneShot(crabDeathSound);
+
+            // Destroy bullet
+            Destroy(other.gameObject);
+
+            // ScoreManager.AddScore(100);
+
+            // Notify the CrabSpawner to remove this Crab enemy
+            if (crabSpawner != null)
+            {
+                crabSpawner.RemoveCrab(this);
+            }
+
+            // Destroy crab enemy
+            Destroy(gameObject);
+        }
+    }
 }
