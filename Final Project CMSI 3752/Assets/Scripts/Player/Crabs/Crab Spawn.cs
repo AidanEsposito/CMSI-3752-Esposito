@@ -1,32 +1,41 @@
 using UnityEngine;
 
-public class CrabTilesetSpawner : MonoBehaviour
+public class CrabSpawner : MonoBehaviour
 {
-    public GameObject crabPrefab;
-    public Vector2Int tilesetGridSize;
-    public Vector2 tileSize;
+    public GameObject crabPrefab; 
+    public Transform spawnPoint; 
+    public float spawnInterval = 1f; 
 
-    void Start()
-    {
-        SpawnCrabsWithinTileset();
-    }
+    private float timer = 0f;
 
-    void SpawnCrabsWithinTileset()
+    void Update()
     {
-        for (int x = 0; x < tilesetGridSize.x; x++)
+        timer += Time.deltaTime;
+
+        if (timer >= spawnInterval)
         {
-            for (int y = 0; y < tilesetGridSize.y; y++)
-            {
-                Vector2 spawnPosition = CalculateSpawnPosition(x, y);
-                Instantiate(crabPrefab, spawnPosition, Quaternion.identity);
-            }
+            SpawnCrab();
+            timer = 0f;
         }
     }
 
-    Vector2 CalculateSpawnPosition(int x, int y)
+    void SpawnCrab()
     {
-        float randomX = transform.position.x + x * tileSize.x + Random.Range(0f, tileSize.x);
-        float randomY = transform.position.y + y * tileSize.y + Random.Range(0f, tileSize.y);
-        return new Vector2(randomX, randomY);
+       
+        GameObject newCrab = Instantiate(crabPrefab, spawnPoint.position, Quaternion.identity);
+
+        CrabEnemy crabEnemy = newCrab.GetComponent<CrabEnemy>();
+        if (crabEnemy != null)
+        {
+            crabEnemy.SetCrabSpawner(this);
+        }
+    }
+
+    public void RemoveCrab(CrabEnemy crab)
+    {
+        if (crab != null)
+        {
+            Destroy(crab.gameObject);
+        }
     }
 }

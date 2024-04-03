@@ -18,22 +18,22 @@ public class PlayerAnimations : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.D))
         {
             animator.SetBool("IsWalking", true);
-            animator.SetTrigger("WalkRight");
+            // animator.SetTrigger("WalkRight");
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
             animator.SetBool("IsWalking", true);
-            animator.SetTrigger("WalkUp");
+            // animator.SetTrigger("WalkUp");
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
             animator.SetBool("IsWalking", true);
-            animator.SetTrigger("WalkLeft");
+            // animator.SetTrigger("WalkLeft");
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
             animator.SetBool("IsWalking", true);
-            animator.SetTrigger("WalkDown");
+            // animator.SetTrigger("WalkDown");
         }
         else
         {
