@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         // Check if the collision is with a GameObject tagged as "Obstacle" (You can change the tag to fit your game)
-        if (collision.gameObject.CompareTag("Obstacle"))
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             // Destroy the bullet when it collides with an obstacle
             Destroy(gameObject);
