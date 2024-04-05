@@ -23,6 +23,7 @@ public class CrabSpawner : MonoBehaviour
     {
        
         GameObject newCrab = Instantiate(crabPrefab, spawnPoint.position, Quaternion.identity);
+        newCrab.gameObject.transform.SetParent(GameObject.Find("Enemies").transform);
 
         CrabEnemy crabEnemy = newCrab.GetComponent<CrabEnemy>();
         if (crabEnemy != null)
@@ -31,7 +32,7 @@ public class CrabSpawner : MonoBehaviour
         }
     }
 
-    public void RemoveCrab(CrabEnemy crab)
+    public void RemoveCrab(CrabEnemy crab )
     {
         if (crab != null)
         {

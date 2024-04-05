@@ -8,6 +8,6 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         // Update score text
-        scoreText.text = "Score: " + ScoreManager.score;
+        //scoreText.text = "Score: " + ScoreManager.score;
     }
 }

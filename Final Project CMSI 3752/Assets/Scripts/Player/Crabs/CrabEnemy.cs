@@ -8,7 +8,7 @@ public class CrabEnemy : MonoBehaviour
     public float attackRange = 1.5f;
     private Animator animator;
     private AudioSource audioSource;
-    private CrabSpawner crabSpawner; 
+    private CrabSpawner crabSpawner;
 
     public void SetCrabSpawner(CrabSpawner spawner)
     {
@@ -65,7 +65,8 @@ public class CrabEnemy : MonoBehaviour
 
             // Destroy bullet
             Destroy(other.gameObject);
-
+            ScoreManager.Instance.AddScore(1);
+            Debug.Log("score increased by 1");
             // ScoreManager.AddScore(100);
 
             // Notify the CrabSpawner to remove this Crab enemy
