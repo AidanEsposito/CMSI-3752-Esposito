@@ -5,7 +5,6 @@ public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public GameObject bulletPrefab;
-    public float fireSpeed = 10f;
     public float fireRate = 0.5f;
     public AudioClip fireSound;
     public AudioClip hitSound;
@@ -13,7 +12,6 @@ public class PlayerMovement : MonoBehaviour
     public int maxHitsAllowed = 3;
     public GameObject gameOverText; // Reference to the UI Text element displaying "GAME OVER"
 
-    private Vector2 lastMoveDirection = Vector2.right;
     private float nextFireTime;
     private AudioSource audioSource;
     private bool isInvincible = false;
@@ -30,29 +28,38 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        transform.Translate(moveInput * moveSpeed * Time.deltaTime);
-
-        if (Input.GetKey(KeyCode.Space) && Time.time >= nextFireTime)
+        Move();
+        if (Input.GetMouseButton(0) && Time.time >= nextFireTime)
         {
             Fire();
             nextFireTime = Time.time + fireRate;
         }
+    }
 
-        if (moveInput != Vector2.zero)
-        {
-            lastMoveDirection = moveInput.normalized;
-        }
+    void Move()
+    {
+        Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        transform.Translate(moveInput * moveSpeed * Time.deltaTime);
+    }
+
+    public void AimAt(Vector3 target)
+    {
+        Vector2 aimDirection = (target - transform.position).normalized;
+        transform.up = aimDirection; // Point the player towards the target
     }
 
     void Fire()
     {
+        // Calculate direction towards mouse position
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 fireDirection = (mousePos - transform.position).normalized;
+
+        // Instantiate bullet and set its direction
         GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-        bulletObject.layer = gameObject.layer;
         Bullet bullet = bulletObject.GetComponent<Bullet>();
         if (bullet != null)
         {
-            bullet.SetMoveDirection(lastMoveDirection);
+            bullet.SetMoveDirection(fireDirection);
         }
 
         if (fireSound != null && audioSource != null)
@@ -63,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy") && !isInvincible)
+        if ((other.CompareTag("Enemy") || other.CompareTag("Bullets")) && !isInvincible)
         {
             hitCount++;
             if (hitCount >= maxHitsAllowed)
