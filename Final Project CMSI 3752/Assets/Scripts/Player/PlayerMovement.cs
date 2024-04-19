@@ -23,9 +23,9 @@ public class PlayerMovement : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         renderer2D = GetComponent<Renderer>();
+        // powerUpDManager = FindObjectOfType<PowerUpManager>();
         // Initially, hide the "GAME OVER" text
         gameOverText.SetActive(false);
-        // powerUpManager = FindObjectOfType<PowerUpManager>();
     }
 
     void Update()
@@ -58,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
 
         // Instantiate bullet and set its direction
         GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-        Debug.Log("Bullet Fired");
+        debu.Log("Bullet Fired");
         Bullet bullet = bulletObject.GetComponent<Bullet>();
         if (bullet != null)
         {
@@ -73,9 +73,9 @@ public class PlayerMovement : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        // if (other.CompareTag("GoldCoin"))
+        // if (other.CompareTag("Powerup"))
         // {
-        //     // powerUpManager.ActivatePowerUp();
+        //     powerUpManager.ActivatePowerUp();
         //     Destroy(other.gameObject); // Destroy the gold coin when collected
         // }
         if ((other.CompareTag("Enemy") || other.CompareTag("EnemyBullets")) && !isInvincible)
