@@ -58,7 +58,7 @@ public class CrabEnemy : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Bullets"))
+        if (other.CompareTag("PlayerBullets"))
         {
             // Play death sound
             // audioSource.PlayOneShot(crabDeathSound);

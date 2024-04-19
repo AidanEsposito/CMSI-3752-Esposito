@@ -3,6 +3,8 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed = 5f; // Speed of the bullet
+    public bool isPlayerBullet;
+    public bool isEnemyBullet;
     private Vector2 moveDirection; // Direction of movement
 
     // Method to set the direction of movement
@@ -20,12 +22,12 @@ public class Bullet : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         // Check if the collision is with a GameObject tagged as "Obstacle" (You can change the tag to fit your game)
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy") && isPlayerBullet == true)
         {
             // Destroy the bullet when it collides with an obstacle
             Destroy(gameObject);
         }
-        else if (collision.gameObject.CompareTag("Player"))
+        else if (collision.gameObject.CompareTag("Player") && isEnemyBullet == true)
         {
 
             Destroy(gameObject);

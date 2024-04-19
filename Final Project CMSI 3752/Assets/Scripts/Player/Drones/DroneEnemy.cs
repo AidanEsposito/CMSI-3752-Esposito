@@ -59,13 +59,13 @@
             }
         }
 
-        // void OnTriggerEnter2D(Collider2D other)
-        // {
-        //     if (other.CompareTag("Bullets"))
-        //     {
-        //         // Destroy the enemy when hit by a bullet
-        //         Destroy(gameObject);
-        //     }
-        // }
+        void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.CompareTag("PlayerBullets"))
+            {
+                // Destroy the enemy when hit by a bullet
+                Destroy(gameObject);
+            }
+        }
 
     }

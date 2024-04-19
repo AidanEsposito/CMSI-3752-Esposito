@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isInvincible = false;
     private int hitCount = 0;
     private Renderer renderer2D;
+    // private PowerUpManager powerUpManager;
 
     void Start()
     {
@@ -24,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
         renderer2D = GetComponent<Renderer>();
         // Initially, hide the "GAME OVER" text
         gameOverText.SetActive(false);
+        // powerUpManager = FindObjectOfType<PowerUpManager>();
     }
 
     void Update()
@@ -56,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
 
         // Instantiate bullet and set its direction
         GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+        Debug.Log("Bullet Fired");
         Bullet bullet = bulletObject.GetComponent<Bullet>();
         if (bullet != null)
         {
@@ -70,7 +73,12 @@ public class PlayerMovement : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if ((other.CompareTag("Enemy") || other.CompareTag("Bullets")) && !isInvincible)
+        // if (other.CompareTag("GoldCoin"))
+        // {
+        //     // powerUpManager.ActivatePowerUp();
+        //     Destroy(other.gameObject); // Destroy the gold coin when collected
+        // }
+        if ((other.CompareTag("Enemy") || other.CompareTag("EnemyBullets")) && !isInvincible)
         {
             hitCount++;
             if (hitCount >= maxHitsAllowed)
