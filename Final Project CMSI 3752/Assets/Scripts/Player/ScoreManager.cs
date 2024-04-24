@@ -4,6 +4,8 @@ using UnityEngine.Tilemaps;
 public class ScoreManager : MonoBehaviour
 {
     private static ScoreManager instance;
+    public delegate void ScoreChangedDelegate(int newScore);
+    public event ScoreChangedDelegate OnScoreChanged;
 
     public static ScoreManager Instance
     {
@@ -28,6 +30,7 @@ public class ScoreManager : MonoBehaviour
     public void AddScore(int points)
     {
         score += points;
+        OnScoreChanged?.Invoke(score);
 
         if (score >= 10)
         {

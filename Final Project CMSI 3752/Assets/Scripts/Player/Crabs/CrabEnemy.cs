@@ -4,7 +4,7 @@ public class CrabEnemy : MonoBehaviour
 {
     public float speed = 50f;
     private Transform player;
-    public AudioClip crabDeathSound;
+    public AudioClip crabDeath2;
     public float attackRange = 1.5f;
     private Animator animator;
     private AudioSource audioSource;
@@ -64,6 +64,7 @@ public class CrabEnemy : MonoBehaviour
             // audioSource.PlayOneShot(crabDeathSound);
 
             // Destroy bullet
+            audioSource.PlayOneShot(crabDeath2);
             Destroy(other.gameObject);
             ScoreManager.Instance.AddScore(1);
             Debug.Log("score increased by 1");

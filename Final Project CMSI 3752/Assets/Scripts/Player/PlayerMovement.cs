@@ -7,10 +7,12 @@ public class PlayerMovement : MonoBehaviour
     public GameObject bulletPrefab;
     public float fireRate = 0.5f;
     public AudioClip fireSound;
-    public AudioClip hitSound;
+    public AudioClip playerDamage;
+    public AudioClip deadPlayer;
     public float invincibilityDuration = 3f;
     public int maxHitsAllowed = 3;
     public GameObject gameOverText; // Reference to the UI Text element displaying "GAME OVER"
+    public GameObject returnButton; // Reference to the UI Button element to return to the main menu
 
     private float nextFireTime;
     private AudioSource audioSource;
@@ -23,9 +25,9 @@ public class PlayerMovement : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         renderer2D = GetComponent<Renderer>();
-        // powerUpDManager = FindObjectOfType<PowerUpManager>();
-        // Initially, hide the "GAME OVER" text
+        Time.timeScale = 1f;
         gameOverText.SetActive(false);
+        returnButton.SetActive(false);
     }
 
     void Update()
@@ -58,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
 
         // Instantiate bullet and set its direction
         GameObject bulletObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-        debu.Log("Bullet Fired");
+        Debug.Log("Bullet Fired");
         Bullet bullet = bulletObject.GetComponent<Bullet>();
         if (bullet != null)
         {
@@ -80,9 +82,11 @@ public class PlayerMovement : MonoBehaviour
         // }
         if ((other.CompareTag("Enemy") || other.CompareTag("EnemyBullets")) && !isInvincible)
         {
+            audioSource.PlayOneShot(playerDamage);
             hitCount++;
             if (hitCount >= maxHitsAllowed)
             {
+                  audioSource.PlayOneShot(deadPlayer);
                 GameOver();
             }
             else
@@ -112,5 +116,6 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log("Game Over");
         Time.timeScale = 0;
         gameOverText.SetActive(true);
+        returnButton.SetActive(true);
     }
 }

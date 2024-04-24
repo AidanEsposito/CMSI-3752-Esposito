@@ -8,7 +8,10 @@
         public float moveSpeed = 3f;
         public float minDistanceFromPlayer = 5f;
         public float fireInterval = 3f; // Interval between each bullet fire
+        public AudioClip droneFireSound;
+        public AudioClip droneDeath;
         private DroneSpawner droneSpawner;
+        private AudioSource audioSource;
 
         private Transform player;
 
@@ -20,6 +23,7 @@
         void Start()
         {
             player = GameObject.FindGameObjectWithTag("Player").transform;
+            audioSource = GetComponent<AudioSource>();
             StartCoroutine(FireRoutine()); // Start firing routine
         }
 
@@ -49,6 +53,7 @@
                 Vector2 directionToPlayer = (player.position - transform.position).normalized;
 
                 // Instantiate a bullet
+                audioSource.PlayOneShot(droneFireSound);
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
                 bullet.SetActive(true);
                 // Set bullet's direction towards the player
@@ -64,6 +69,7 @@
             if (other.CompareTag("PlayerBullets"))
             {
                 // Destroy the enemy when hit by a bullet
+                audioSource.PlayOneShot(droneDeath);
                 Destroy(gameObject);
             }
         }
